@@ -29,6 +29,7 @@ for (const selector of [
   '.event-photo-12',
   'event-dissolve',
   '.woki-heading',
+  '.vote-link',
   '.signal-route',
   '.sync-status summary',
 ]) {

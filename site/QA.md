@@ -26,7 +26,7 @@
 - Seis fotografías locales de concurso (404 KB en total); cuatro fondos visibles en móvil. Sin scripts ni peticiones a Google Photos desde la web.
 - Vista de 320 px verificada sin desbordamiento. Las fotografías no interceptan los enlaces ni los botones.
 - Prueba local de +10 votos: contador 37, posición #3, caption `+10 votos recibidos`, animación `packet-arrive` y pulso de subida presentes.
-- Prueba local de desconexión: última lectura conservada, botón desactivado y estado de desconexión. La reconexión dispara la consulta sin esperar el intervalo.
+- Prueba local de desconexión: última lectura conservada y estado de desconexión. La reconexión dispara la consulta sin esperar el intervalo.
 - Detalle del estado de sincronización accesible al pulsar/tocar; el indicador principal tiene una sola línea. Movimiento reducido desactiva paquete y pulso.
 - Logos: 24 imágenes oficiales cargadas, ninguna rota; diseño móvil sin desbordamiento. Tamaño 44 px en escritorio y 32 px en móvil, con iniciales como respaldo ante error.
 
@@ -52,13 +52,17 @@
 - Botones y enlaces principales conservan al menos 44 px de alto. El nombre WOKI enlaza a su página oficial; el acceso a su fila conserva nombre accesible en móvil, donde se representa con una flecha.
 - Verificados los 24 enlaces oficiales y el salto a `#project-woki`. Encabezado «Ranking de votos», sin subtítulo redundante.
 
-## Límites de la validación
-
 ## Acabado de logos
 
 - Marco superpuesto a la imagen y radio compartido de 10 px en escritorio / 8 px en móvil; recorte contenido dentro de los tamaños de 44 / 32 px.
 - Pa’lante y Replica usan marco de 2 px para cubrir el borde claro incorporado en sus archivos, sin modificar los originales.
 - Los 24 logos mantienen sus dimensiones en móvil; marco sin eventos de puntero para conservar los enlaces de las filas.
+
+## Acción de voto y fondo
+
+- Cabecera con una sola acción: «Votar por WOKI» abre la página oficial del proyecto en otra pestaña. Retirados «Actualizar» y «Sitio oficial»; se conserva la sincronización automática.
+- Acción de 46 px de alto a 320 px, sin desbordamiento; texto oscuro sobre lima también en hover y visited.
+- Reducida suavemente la opacidad de las sombras del collage, tanto en escritorio como en móvil. La tarjeta WOKI y la tabla mantienen fondos completamente opacos.
 
 ## Alcance de las pruebas
 

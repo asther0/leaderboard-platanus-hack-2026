@@ -3,13 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import { projectLogoUrl } from '@/lib/project-logos';
-import {
-  ArrowDown,
-  ArrowUp,
-  ArrowUpRight,
-  Radio,
-  RefreshCw,
-} from 'lucide-react';
+import { ArrowDown, ArrowUp, ArrowUpRight, Radio } from 'lucide-react';
 import { SOURCE_URL, type LeaderboardData } from '@/lib/projects';
 import {
   mergeSnapshot,
@@ -266,27 +260,14 @@ export function LeaderboardClient({
           </h1>
         </div>
         <div className="header-actions">
-          <button
-            type="button"
-            className="action-button refresh-button"
-            onClick={() => void refresh()}
-            disabled={refreshing || offline}
-          >
-            <RefreshCw
-              size={16}
-              className={refreshing ? 'spin' : ''}
-              aria-hidden="true"
-            />
-            <span>{refreshing ? 'Actualizando…' : 'Actualizar'}</span>
-          </button>
           <a
-            className="action-button official-link"
-            href={SOURCE_URL}
+            className="action-button vote-link"
+            href={`${SOURCE_URL}/woki`}
             target="_blank"
             rel="noopener noreferrer"
           >
-            Sitio oficial <ArrowUpRight size={16} aria-hidden="true" />
-            <span className="sr-only"> (abre otra pestaña)</span>
+            Votar por WOKI <ArrowUpRight size={16} aria-hidden="true" />
+            <span className="sr-only"> en Platanus (abre otra pestaña)</span>
           </a>
         </div>
       </header>
