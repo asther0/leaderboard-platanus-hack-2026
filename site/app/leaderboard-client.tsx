@@ -37,7 +37,9 @@ function ProjectLogo({ slug, name }: { slug: string; name: string }) {
         <Image
           src={src}
           alt=""
-          fill
+          width={44}
+          height={44}
+          style={{ maxWidth: 44, maxHeight: 44, objectFit: 'contain' }}
           sizes="(max-width: 640px) 32px, 44px"
           onLoad={() => setLoaded(true)}
           onError={() => setFailed(true)}

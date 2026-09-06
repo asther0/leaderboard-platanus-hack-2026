@@ -32,6 +32,15 @@
 
 ## Límites de la validación
 
+## Regresión de logos en producción
+
+- Reproducido: el HTML nuevo se publicó con CSS anterior sin `.project-logo` ni `.event-backdrop`. Las imágenes con `fill` ocuparon 1440 × 1000 px.
+- Corrección: dimensiones intrínsecas y límite explícito de 44 px, sin `fill`. Caché persistente de compilación desactivada para regenerar los estilos desde el código fuente.
+- `postbuild` comprueba que el CSS compilado contenga los estilos de logos, collage, radio y sincronización; falla antes de publicar si faltan.
+- Build de producción local: 24 contenedores de 44 px en escritorio y 32 px en móvil (imagen interior 42/30 px), sin desbordamiento horizontal a 375 px. Collage con posición fija correctamente aplicada.
+
+## Alcance
+
 Las pruebas de cambios y errores usan respuestas simuladas solo dentro del navegador local. Las lecturas de votos se contrastan por separado con el origen público. La sincronización periódica no garantiza recibir un voto en el instante de su emisión.
 
 El seguimiento de sesión no sustituye un historial persistente. El catálogo de proyectos requiere mantenimiento si se agregan participantes.

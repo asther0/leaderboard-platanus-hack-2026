@@ -1,6 +1,10 @@
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
+  experimental: {
+    // Rebuild CSS from source: the restored build cache served pre-logo styles.
+    turbopackFileSystemCacheForBuild: false,
+  },
   images: {
     remotePatterns: [
       {
