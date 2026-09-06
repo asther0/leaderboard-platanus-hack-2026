@@ -54,6 +54,14 @@
 
 ## Límites de la validación
 
+## Acabado de logos
+
+- Marco superpuesto a la imagen y radio compartido de 10 px en escritorio / 8 px en móvil; recorte contenido dentro de los tamaños de 44 / 32 px.
+- Pa’lante y Replica usan marco de 2 px para cubrir el borde claro incorporado en sus archivos, sin modificar los originales.
+- Los 24 logos mantienen sus dimensiones en móvil; marco sin eventos de puntero para conservar los enlaces de las filas.
+
+## Alcance de las pruebas
+
 Las pruebas de cambios y errores usan respuestas simuladas solo dentro del navegador local. Las lecturas de votos se contrastan por separado con el origen público. La sincronización periódica no garantiza recibir un voto en el instante de su emisión.
 
 El seguimiento de sesión no sustituye un historial persistente. El catálogo de proyectos requiere mantenimiento si se agregan participantes.

@@ -22,6 +22,7 @@ const css = await stylesIn(
 );
 for (const selector of [
   '.project-logo',
+  '--logo-radius',
   '.logo-fallback',
   '.event-backdrop',
   '.event-photo-1',
