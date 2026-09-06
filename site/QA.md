@@ -40,10 +40,17 @@
 ## Fondo automático del evento
 
 - Doce JPEG distintos, 718 KB en total; test automático de formato, duplicados y presupuesto de 1 MB.
-- Tres composiciones, cambio cada 12 s con fundido de 3 s. Verificados los fotogramas de 0, 10.5, 12.5, 24.5 y 35.5 s: sin saltos en la posición de la tabla.
-- «Pausar fondo» detiene las tres animaciones y permite reanudarlas; ocultar la pestaña también las pausa.
+- Tres composiciones, cambio cada 5 s con fundido de 1,5 s; ciclo CSS de 15 s con desfases de 0, -10 y -5 s.
+- Botón «Pausar fondo» retirado a petición del propietario. Ocultar la pestaña sigue pausando las animaciones.
 - `prefers-reduced-motion: reduce` comprobado en Chromium: cero animaciones, primera composición visible, resto ocultas.
 - A 320 px: documento de 320 px, logos de 32 px y las doce fotografías distribuidas entre los primeros cuatro espacios de cada composición.
+
+## Cabecera compacta
+
+- A 1440 px, tarjeta WOKI de 133 px (antes 276 px) y comienzo de tabla a 269 px (antes 528 px).
+- A 375 px, tarjeta de 273 px y tabla a 439 px. Sin desbordamiento a 320, 375, 768 y 1440 px.
+- Botones y enlaces principales conservan al menos 44 px de alto. El nombre WOKI enlaza a su página oficial; el acceso a su fila conserva nombre accesible en móvil, donde se representa con una flecha.
+- Verificados los 24 enlaces oficiales y el salto a `#project-woki`. Encabezado «Ranking de votos», sin subtítulo redundante.
 
 ## Límites de la validación
 

@@ -7,7 +7,6 @@ import {
   ArrowDown,
   ArrowUp,
   ArrowUpRight,
-  Crosshair,
   Radio,
   RefreshCw,
 } from 'lucide-react';
@@ -262,10 +261,9 @@ export function LeaderboardClient({
             <span>· BOGOTÁ</span>
           </p>
           <h1>
-            Tabla de <span>votos</span>
+            Ranking de <span>votos</span>
             <span className="title-period">.</span>
           </h1>
-          <p className="intro">Todo el hackathon. Un solo ranking.</p>
         </div>
         <div className="header-actions">
           <button
@@ -302,15 +300,23 @@ export function LeaderboardClient({
           />
         )}
         <div className="woki-identity">
-          <p className="eyebrow">
-            <Crosshair size={14} aria-hidden="true" /> PROYECTO DESTACADO
-          </p>
-          <h2 id="woki-title">WOKI</h2>
-          <p className="woki-motto">
-            La ayuda sigue.
-            <br />
-            Incluso sin internet.
-          </p>
+          <div className="woki-heading">
+            <h2 id="woki-title">
+              <a
+                href={`${SOURCE_URL}/woki`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                WOKI <ArrowUpRight size={18} aria-hidden="true" />
+                <span className="sr-only">
+                  {' '}
+                  en Platanus (abre otra pestaña)
+                </span>
+              </a>
+            </h2>
+            <span className="eyebrow">DESTACADO</span>
+          </div>
+          <p className="woki-motto">La ayuda sigue. Incluso sin internet.</p>
           <div className={`woki-transmission ${offline ? 'is-offline' : ''}`}>
             <svg
               className="signal-route"
@@ -341,15 +347,6 @@ export function LeaderboardClient({
                 : reception?.label || 'Comunicar. Conectar. Ayudar.'}
             </span>
           </div>
-          <a
-            className="text-link"
-            href={`${SOURCE_URL}/woki`}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Ver en Platanus <ArrowUpRight size={15} />
-            <span className="sr-only"> (abre otra pestaña)</span>
-          </a>
         </div>
         <div className="woki-stat">
           <span className="eyebrow">
@@ -394,7 +391,7 @@ export function LeaderboardClient({
                 desde que abriste
               </>
             ) : (
-              'Siguiendo los cambios'
+              'Votos públicos'
             )}
           </span>
         </div>
@@ -428,8 +425,13 @@ export function LeaderboardClient({
               max={(nextProject.votes ?? 0) + 1}
             />
           )}
-          <a className="text-link jump-link" href="#project-woki">
-            Ubicar en la tabla <ArrowDown size={14} aria-hidden="true" />
+          <a
+            className="text-link jump-link"
+            href="#project-woki"
+            aria-label="Ubicar WOKI en la tabla"
+          >
+            <span>Ubicar en la tabla</span>{' '}
+            <ArrowDown size={14} aria-hidden="true" />
           </a>
         </div>
       </section>
@@ -452,7 +454,7 @@ export function LeaderboardClient({
         <div className="ranking-toolbar">
           <div>
             <h2 id="ranking-title" tabIndex={-1}>
-              Leaderboard
+              Proyectos
             </h2>
             <p>
               {data.projects.length} proyectos <span>·</span>{' '}

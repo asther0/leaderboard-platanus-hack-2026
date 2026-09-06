@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState, useSyncExternalStore } from 'react';
-import { Pause, Play } from 'lucide-react';
 
 // First four slots cover all twelve photos across the three mobile scenes.
 const scenes = [
@@ -28,7 +27,6 @@ function environmentSnapshot() {
 }
 
 export function EventBackdrop() {
-  const [paused, setPaused] = useState(false);
   const [ready, setReady] = useState(false);
   const environment = useSyncExternalStore(
     subscribeEnvironment,
@@ -61,54 +59,28 @@ export function EventBackdrop() {
     };
   }, [reducedMotion]);
 
-  const running = ready && visible && !paused && !reducedMotion;
+  const running = ready && visible && !reducedMotion;
 
   return (
-    <>
-      <div
-        className="event-backdrop"
-        aria-hidden="true"
-        data-running={running}
-        data-ready={ready}
-      >
-        <div className="event-scenes">
-          {scenes.map((photos, scene) => (
-            <div
-              key={scene}
-              className="event-collage"
-              style={{ animationDelay: `${-((3 - scene) % 3) * 12}s` }}
-            >
-              {photos.map((photo, slot) => (
-                <div
-                  key={slot}
-                  className={`event-photo event-photo-${photo}`}
-                />
-              ))}
-            </div>
-          ))}
-        </div>
-      </div>
-      {!reducedMotion && ready && (
-        <div className="background-controls">
-          <button
-            type="button"
-            className="background-toggle"
-            aria-label={
-              paused
-                ? 'Reanudar animación del fondo'
-                : 'Pausar animación del fondo'
-            }
-            onClick={() => setPaused(!paused)}
+    <div
+      className="event-backdrop"
+      aria-hidden="true"
+      data-running={running}
+      data-ready={ready}
+    >
+      <div className="event-scenes">
+        {scenes.map((photos, scene) => (
+          <div
+            key={scene}
+            className="event-collage"
+            style={{ animationDelay: `${-((3 - scene) % 3) * 5}s` }}
           >
-            {paused ? (
-              <Play size={13} aria-hidden="true" />
-            ) : (
-              <Pause size={13} aria-hidden="true" />
-            )}
-            {paused ? 'Animar fondo' : 'Pausar fondo'}
-          </button>
-        </div>
-      )}
-    </>
+            {photos.map((photo, slot) => (
+              <div key={slot} className={`event-photo event-photo-${photo}`} />
+            ))}
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }

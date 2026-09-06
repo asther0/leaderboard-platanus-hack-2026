@@ -27,7 +27,7 @@ for (const selector of [
   '.event-photo-1',
   '.event-photo-12',
   'event-dissolve',
-  '.background-toggle',
+  '.woki-heading',
   '.signal-route',
   '.sync-status summary',
 ]) {
