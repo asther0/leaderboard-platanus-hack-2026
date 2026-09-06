@@ -41,7 +41,7 @@ npm run build
 - Rama de producción: `main`
 - Web Analytics se integra con `@vercel/analytics/next`.
 
-La conexión automática requiere que la cuenta de Vercel tenga GitHub conectado en Authentication. Mientras se completa esa autorización, el despliegue puede realizarse con la CLI desde la raíz del repositorio.
+El repositorio está conectado a Vercel. Cada push a `main` genera un despliegue de producción; las demás ramas generan previews. También se puede desplegar con la CLI desde la raíz del repositorio.
 
 El favicon es el logo original publicado por WOKI en Platanus. `.gstack/` contiene artefactos locales de revisión y no se publica en Git.
 
