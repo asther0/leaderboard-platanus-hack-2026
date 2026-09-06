@@ -45,6 +45,14 @@ El repositorio está conectado a Vercel. Cada push a `main` genera un despliegue
 
 El favicon es el logo original publicado por WOKI en Platanus. `.gstack/` contiene artefactos locales de revisión y no se publica en Git.
 
+## Identidad visual
+
+El fondo usa seis fotografías del álbum del concurso compartido por el propietario, guardadas localmente en `site/public/event/`. Son copias de resolución reducida sin hotlinks ni acceso a Google Photos desde el navegador de los visitantes. En móvil se muestran cuatro. El collage es decorativo, no interactivo, y los datos conservan superficies sólidas.
+
+El motivo de radio de WOKI reproduce una recepción solo ante votos nuevos, una subida de puesto o recuperación de conexión. No simula transmisiones LoRa reales. Con movimiento reducido se conserva el texto del cambio sin animación. El indicador de actualización muestra la antigüedad de la lectura; al abrirlo explica el intervalo y la dependencia de internet del leaderboard.
+
+Los 24 logos corresponden al directorio oficial de proyectos. Next.js los optimiza y carga progresivamente; si una imagen falla se muestran las iniciales sin cambiar el tamaño de la fila.
+
 ## Límites
 
 No se guarda un historial permanente ni se detectan automáticamente proyectos nuevos. Si cambia el catálogo, actualizar `site/lib/projects.ts`. Si Platanus cambia su estructura de datos, las lecturas se marcarán como pendientes hasta adaptar el lector.

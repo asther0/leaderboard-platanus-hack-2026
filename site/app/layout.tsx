@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Space_Grotesk, IBM_Plex_Mono } from 'next/font/google';
 import { Analytics } from '@vercel/analytics/next';
+import { EventBackdrop } from './event-backdrop';
 import './globals.css';
 
 const heading = Space_Grotesk({
@@ -26,6 +27,7 @@ export default function RootLayout({
   return (
     <html lang="es" className="dark">
       <body className={`${heading.variable} ${mono.variable}`}>
+        <EventBackdrop />
         {children}
         <Analytics />
       </body>

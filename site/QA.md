@@ -21,6 +21,15 @@
 - Vista de 320 px: ancho del documento de 320 px, sin desbordamiento; botones de 46 px; acceso directo a WOKI visible y operativo.
 - Diseño inspeccionado en escritorio y móvil. Movimiento reducido respetado.
 
+## Collage y recepción WOKI
+
+- Seis fotografías locales de concurso (404 KB en total); cuatro fondos visibles en móvil. Sin scripts ni peticiones a Google Photos desde la web.
+- Vista de 320 px verificada sin desbordamiento. Las fotografías no interceptan los enlaces ni los botones.
+- Prueba local de +10 votos: contador 37, posición #3, caption `+10 votos recibidos`, animación `packet-arrive` y pulso de subida presentes.
+- Prueba local de desconexión: última lectura conservada, botón desactivado y estado de desconexión. La reconexión dispara la consulta sin esperar el intervalo.
+- Detalle del estado de sincronización accesible al pulsar/tocar; el indicador principal tiene una sola línea. Movimiento reducido desactiva paquete y pulso.
+- Logos: 24 imágenes oficiales cargadas, ninguna rota; diseño móvil sin desbordamiento. Tamaño 44 px en escritorio y 32 px en móvil, con iniciales como respaldo ante error.
+
 ## Límites de la validación
 
 Las pruebas de cambios y errores usan respuestas simuladas solo dentro del navegador local. Las lecturas de votos se contrastan por separado con el origen público. La sincronización periódica no garantiza recibir un voto en el instante de su emisión.

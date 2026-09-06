@@ -1,6 +1,8 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import Image from 'next/image';
+import { projectLogoUrl } from '@/lib/project-logos';
 import {
   ArrowDown,
   ArrowUp,
@@ -18,13 +20,31 @@ import {
   voteChanges,
 } from '@/lib/leaderboard';
 
-function bogotaTime(isoDate: string) {
-  const date = new Date(isoDate);
-  return `${String((date.getUTCHours() + 19) % 24).padStart(2, '0')}:${String(date.getUTCMinutes()).padStart(2, '0')}:${String(date.getUTCSeconds()).padStart(2, '0')}`;
-}
-
 function signed(value: number) {
   return `${value > 0 ? '+' : ''}${value}`;
+}
+
+function ProjectLogo({ slug, name }: { slug: string; name: string }) {
+  const [failed, setFailed] = useState(false);
+  const [loaded, setLoaded] = useState(false);
+  const src = projectLogoUrl(slug);
+  return (
+    <span className="project-logo" data-project={slug} aria-hidden="true">
+      {(!loaded || failed || !src) && (
+        <span className="logo-fallback">{name.slice(0, 2).toUpperCase()}</span>
+      )}
+      {src && !failed && (
+        <Image
+          src={src}
+          alt=""
+          fill
+          sizes="(max-width: 640px) 32px, 44px"
+          onLoad={() => setLoaded(true)}
+          onError={() => setFailed(true)}
+        />
+      )}
+    </span>
+  );
 }
 
 export function LeaderboardClient({
@@ -38,13 +58,18 @@ export function LeaderboardClient({
   const inFlight = useRef(false);
   const request = useRef<AbortController | null>(null);
   const nextRefresh = useRef(0);
+  const needsReconnect = useRef(false);
   const [refreshing, setRefreshing] = useState(false);
-  const [secondsLeft, setSecondsLeft] = useState(REFRESH_SECONDS);
   const [error, setError] = useState<string | null>(null);
   const [changes, setChanges] = useState<Record<string, number>>({});
   const [announcement, setAnnouncement] = useState('');
   const [offline, setOffline] = useState(false);
   const [age, setAge] = useState(0);
+  const [reception, setReception] = useState<{
+    id: number;
+    label: string;
+    rankUp: boolean;
+  } | null>(null);
 
   const refresh = useCallback(async () => {
     if (inFlight.current) return;
@@ -63,6 +88,37 @@ export function LeaderboardClient({
       if (!validSnapshot(incoming)) throw new Error('invalid snapshot');
       const next = mergeSnapshot(current.current, incoming);
       const deltas = voteChanges(current.current, next);
+      const oldWoki = current.current.projects.find(
+        (project) => project.isWoki,
+      );
+      const newWoki = next.projects.find((project) => project.isWoki);
+      const oldRank = oldWoki
+        ? rankOf(current.current.projects, oldWoki)
+        : null;
+      const newRank = newWoki ? rankOf(next.projects, newWoki) : null;
+      const rankUp =
+        next.live &&
+        current.current.live &&
+        oldRank !== null &&
+        newRank !== null &&
+        newRank < oldRank;
+      const recovered =
+        needsReconnect.current &&
+        next.live &&
+        Date.now() - Date.parse(next.updatedAt) < 45_000;
+      if ((deltas.woki ?? 0) > 0 || recovered || rankUp) {
+        setReception({
+          id: Date.now(),
+          rankUp,
+          label:
+            (deltas.woki ?? 0) > 0
+              ? `${signed(deltas.woki)} ${deltas.woki === 1 ? 'voto recibido' : 'votos recibidos'}`
+              : recovered
+                ? 'Conexión recuperada'
+                : 'WOKI subió de puesto',
+        });
+      } else setReception(null);
+      if (recovered) needsReconnect.current = false;
       setBaseline((previous) => ({
         ...previous,
         projects: previous.projects.map((original) => {
@@ -94,6 +150,7 @@ export function LeaderboardClient({
           : 'Sincronización completada. Sin cambios de votos.',
       );
     } catch {
+      needsReconnect.current = true;
       if (request.current === controller)
         setError(
           'No pudimos sincronizar. Conservamos la última lectura y reintentamos en 15 segundos.',
@@ -102,7 +159,6 @@ export function LeaderboardClient({
       window.clearTimeout(timeout);
       inFlight.current = false;
       nextRefresh.current = Date.now() + REFRESH_SECONDS * 1000;
-      setSecondsLeft(REFRESH_SECONDS);
       setRefreshing(false);
     }
   }, []);
@@ -110,16 +166,24 @@ export function LeaderboardClient({
   useEffect(() => {
     const wake = () => {
       setOffline(!navigator.onLine);
+      if (!navigator.onLine) needsReconnect.current = true;
       if (
         document.visibilityState === 'visible' &&
         navigator.onLine &&
-        Date.now() >= nextRefresh.current
+        (needsReconnect.current || Date.now() >= nextRefresh.current)
       )
         void refresh();
     };
     nextRefresh.current = Date.now() + REFRESH_SECONDS * 1000;
     const initialCheck = window.setTimeout(() => {
       setOffline(!navigator.onLine);
+      if (!navigator.onLine) needsReconnect.current = true;
+      setAge(
+        Math.max(
+          0,
+          Math.floor((Date.now() - Date.parse(initialData.updatedAt)) / 1000),
+        ),
+      );
       if (
         navigator.onLine &&
         Date.now() - Date.parse(initialData.updatedAt) > REFRESH_SECONDS * 1000
@@ -136,9 +200,6 @@ export function LeaderboardClient({
         ),
       );
       if (document.visibilityState !== 'visible' || !navigator.onLine) return;
-      setSecondsLeft(
-        Math.max(0, Math.ceil((nextRefresh.current - Date.now()) / 1000)),
-      );
       if (Date.now() >= nextRefresh.current) void refresh();
     }, 1000);
     document.addEventListener('visibilitychange', wake);
@@ -216,10 +277,7 @@ export function LeaderboardClient({
               className={refreshing ? 'spin' : ''}
               aria-hidden="true"
             />
-            <span>{refreshing ? 'Sincronizando' : 'Actualizar'}</span>
-            <span className="countdown" aria-hidden="true">
-              {refreshing ? '···' : `${secondsLeft}s`}
-            </span>
+            <span>{refreshing ? 'Actualizando…' : 'Actualizar'}</span>
           </button>
           <a
             className="action-button official-link"
@@ -234,16 +292,53 @@ export function LeaderboardClient({
       </header>
 
       <section className="woki-spotlight" aria-labelledby="woki-title">
+        {reception?.rankUp && (
+          <span
+            key={reception.id}
+            className="rank-rise-pulse"
+            aria-hidden="true"
+          />
+        )}
         <div className="woki-identity">
           <p className="eyebrow">
             <Crosshair size={14} aria-hidden="true" /> PROYECTO DESTACADO
           </p>
-          <h2 id="woki-title">
-            WOKI
-            <span className="woki-signal" aria-hidden="true">
-              ↗
+          <h2 id="woki-title">WOKI</h2>
+          <p className="woki-motto">
+            La ayuda sigue.
+            <br />
+            Incluso sin internet.
+          </p>
+          <div className={`woki-transmission ${offline ? 'is-offline' : ''}`}>
+            <svg
+              className="signal-route"
+              viewBox="0 0 156 28"
+              fill="none"
+              aria-hidden="true"
+            >
+              <path className="signal-wire" d="M8 14H126" />
+              <circle className="signal-node" cx="8" cy="14" r="3" />
+              <circle className="signal-node" cx="65" cy="14" r="3" />
+              <path
+                className="signal-antenna"
+                d="M130 24V15m-3-3a3 3 0 1 0 6 0 3 3 0 0 0-6 0m-3-6a9 9 0 0 0 0 12m12-12a9 9 0 0 1 0 12m-16-16a15 15 0 0 0 0 20m20-20a15 15 0 0 1 0 20"
+              />
+              {reception && !offline && (
+                <circle
+                  key={reception.id}
+                  className="signal-packet"
+                  cx="8"
+                  cy="14"
+                  r="3"
+                />
+              )}
+            </svg>
+            <span className="signal-caption">
+              {offline
+                ? 'Última lectura guardada'
+                : reception?.label || 'Comunicar. Conectar. Ayudar.'}
             </span>
-          </h2>
+          </div>
           <a
             className="text-link"
             href={`${SOURCE_URL}/woki`}
@@ -258,7 +353,12 @@ export function LeaderboardClient({
           <span className="eyebrow">
             POSICIÓN{uncertain ? ' ESTIMADA' : ''}
           </span>
-          <strong>{wokiRank !== null ? `#${wokiRank}` : '—'}</strong>
+          <strong
+            key={wokiRank}
+            className={reception?.rankUp ? 'number-change' : ''}
+          >
+            {wokiRank !== null ? `#${wokiRank}` : '—'}
+          </strong>
           <span className="stat-note">
             {rankGain ? (
               <>
@@ -358,23 +458,29 @@ export function LeaderboardClient({
               {totalVotes} votos
             </p>
           </div>
-          <div className="sync-status">
-            <span
-              className={`status-dot ${uncertain ? 'status-fallback' : ''}`}
-            />{' '}
-            <span>
-              {offline
-                ? 'Sin conexión'
-                : refreshing
-                  ? 'Sincronizando'
-                  : uncertain
-                    ? 'Pendiente de sincronizar'
-                    : 'Sincronizado'}
-              <small>
-                Lectura {bogotaTime(data.updatedAt)} COT · cada 15 s
-              </small>
-            </span>
-          </div>
+          <details className="sync-status">
+            <summary>
+              <span
+                className={`status-dot ${uncertain ? 'status-fallback' : ''}`}
+              />
+              <span>
+                {offline
+                  ? 'Sin conexión'
+                  : refreshing
+                    ? 'Actualizando…'
+                    : uncertain
+                      ? 'Lectura pendiente'
+                      : age < 3
+                        ? 'Actualizado ahora'
+                        : `Actualizado hace ${age} s`}
+              </span>
+            </summary>
+            <p className="sync-explanation">
+              Consultamos los votos públicos cada 15 segundos. El leaderboard
+              necesita internet para recibir cambios; WOKI puede operar sin
+              internet.
+            </p>
+          </details>
         </div>
         <div className="ranking-columns" aria-hidden="true">
           <span>#</span>
@@ -406,6 +512,7 @@ export function LeaderboardClient({
                     {rank ?? '—'}
                   </span>
                   <span className="project-info">
+                    <ProjectLogo slug={project.slug} name={project.name} />
                     <span className="project-name">
                       {project.name}
                       {project.isWoki && (
