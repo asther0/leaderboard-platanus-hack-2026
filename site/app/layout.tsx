@@ -27,8 +27,8 @@ export default function RootLayout({
   return (
     <html lang="es" className="dark">
       <body className={`${heading.variable} ${mono.variable}`}>
-        <EventBackdrop />
         {children}
+        <EventBackdrop />
         <Analytics />
       </body>
     </html>

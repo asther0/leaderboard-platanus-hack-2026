@@ -47,7 +47,9 @@ El favicon es el logo original publicado por WOKI en Platanus. `.gstack/` contie
 
 ## Identidad visual
 
-El fondo usa seis fotografías del álbum del concurso compartido por el propietario, guardadas localmente en `site/public/event/`. Son copias de resolución reducida sin hotlinks ni acceso a Google Photos desde el navegador de los visitantes. En móvil se muestran cuatro. El collage es decorativo, no interactivo, y los datos conservan superficies sólidas.
+El fondo usa doce fotografías del álbum del concurso compartido por el propietario, guardadas localmente en `site/public/event/` (718 KB en total). Son copias de resolución reducida sin hotlinks ni acceso a Google Photos desde el navegador de los visitantes. Alterna tres composiciones cada 12 segundos, con fundidos de 3 segundos; en móvil muestra cuatro fotos a la vez y recorre las doce. El collage es decorativo y los datos conservan superficies sólidas.
+
+La animación espera a que las fotos estén cargadas, se pausa cuando la pestaña está oculta y puede detenerse con «Pausar fondo» al pie de página. Con `prefers-reduced-motion` o sin JavaScript conserva la primera composición estática. Solo se anima la opacidad, sin desplazamientos ni zoom.
 
 El motivo de radio de WOKI reproduce una recepción solo ante votos nuevos, una subida de puesto o recuperación de conexión. No simula transmisiones LoRa reales. Con movimiento reducido se conserva el texto del cambio sin animación. El indicador de actualización muestra la antigüedad de la lectura; al abrirlo explica el intervalo y la dependencia de internet del leaderboard.
 

@@ -30,8 +30,6 @@
 - Detalle del estado de sincronización accesible al pulsar/tocar; el indicador principal tiene una sola línea. Movimiento reducido desactiva paquete y pulso.
 - Logos: 24 imágenes oficiales cargadas, ninguna rota; diseño móvil sin desbordamiento. Tamaño 44 px en escritorio y 32 px en móvil, con iniciales como respaldo ante error.
 
-## Límites de la validación
-
 ## Regresión de logos en producción
 
 - Reproducido: el HTML nuevo se publicó con CSS anterior sin `.project-logo` ni `.event-backdrop`. Las imágenes con `fill` ocuparon 1440 × 1000 px.
@@ -39,7 +37,15 @@
 - `postbuild` comprueba que el CSS compilado contenga los estilos de logos, collage, radio y sincronización; falla antes de publicar si faltan.
 - Build de producción local: 24 contenedores de 44 px en escritorio y 32 px en móvil (imagen interior 42/30 px), sin desbordamiento horizontal a 375 px. Collage con posición fija correctamente aplicada.
 
-## Alcance
+## Fondo automático del evento
+
+- Doce JPEG distintos, 718 KB en total; test automático de formato, duplicados y presupuesto de 1 MB.
+- Tres composiciones, cambio cada 12 s con fundido de 3 s. Verificados los fotogramas de 0, 10.5, 12.5, 24.5 y 35.5 s: sin saltos en la posición de la tabla.
+- «Pausar fondo» detiene las tres animaciones y permite reanudarlas; ocultar la pestaña también las pausa.
+- `prefers-reduced-motion: reduce` comprobado en Chromium: cero animaciones, primera composición visible, resto ocultas.
+- A 320 px: documento de 320 px, logos de 32 px y las doce fotografías distribuidas entre los primeros cuatro espacios de cada composición.
+
+## Límites de la validación
 
 Las pruebas de cambios y errores usan respuestas simuladas solo dentro del navegador local. Las lecturas de votos se contrastan por separado con el origen público. La sincronización periódica no garantiza recibir un voto en el instante de su emisión.
 
