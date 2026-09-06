@@ -1,0 +1,8 @@
+.git
+.gstack
+site/.gstack
+site/node_modules
+site/.next
+site/dist
+site/.vercel
+site/*.tsbuildinfo

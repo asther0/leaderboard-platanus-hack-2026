@@ -1,0 +1,5 @@
+.gstack/
+.vercel/
+.DS_Store
+*.tsbuildinfo
+.env*
